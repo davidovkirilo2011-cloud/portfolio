@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл — Веб-разработка & Telegram боты</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #1f2937;
+            --glow-color: rgba(59, 130, 246, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--accent-color);
+            border-radius: 50px;
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background: var(--accent-color);
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--glow-color);
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            box-shadow: none;
+            margin-left: 0.5rem;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-color);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        /* Section Layout */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            font-weight: 700;
+        }
+
+        /* Services Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--glow-color);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Reviews Section */
+        .review-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .author {
+            font-weight: 600;
+        }
+
+        .stars {
+            color: #f59e0b;
+        }
+
+        .review-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Contact Form */
+        .form-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--accent-color);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo"><i class="fa-solid fa-code"></i> Кирилл<span>.Dev</span></a>
+        <ul class="nav-links">
+            <li><a href="#services">Услуги</a></li>
+            <li><a href="#reviews">Отзывы</a></li>
+            <li><a href="#contact">Заказать</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="badge">🔥 Работаем быстро & под ключ</div>
+            <h1>Разработка Сайтов & Telegram-Ботов <span>для бизнеса и проектов</span></h1>
+            <p>Делаю современную адаптивную верстку, чистый код и функциональных ботов. Быстрые сроки выполнения и адекватные цены.</p>
+            <a href="#contact" class="btn"><i class="fa-solid fa-paper-plane"></i> Оформить заказ</a>
+            <a href="#services" class="btn btn-outline">Смотреть услуги</a>
+        </div>
+    </div>
+
+    <!-- Services -->
+    <section id="services">
+        <h2 class="section-title">Что я могу сделать</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                <h3>Сайты-визитки / Landing Page</h3>
+                <p>Адаптивные и быстрые одностраничники под мобилки и ПК. Чистый HTML/CSS/JS.</p>
+                <div class="price">от 300 грн</div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fa-brands fa-telegram"></i></div>
+                <h3>Telegram Боты</h3>
+                <p>Боты для приема заявок, автомодерации групп, выдачи информации и взаимодействия с клиентами.</p>
+                <div class="price">от 300 грн</div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-bug"></i></div>
+                <h3>Правки & Исправление ошибок</h3>
+                <p>Доработка вашего сайта, исправление верстки, настройка скриптов и запуск на хостинге.</p>
+                <div class="price">от 150 грн</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews -->
+    <section id="reviews">
+        <h2 class="section-title">Отзывы клиентов</h2>
+        
+        <div class="review-card">
+            <div class="review-header">
+                <span class="author">Влад (Админ ТГ-канала)</span>
+                <span class="stars">★★★★★</span>
+            </div>
+            <p class="review-text">«Заказывал бота для модерации чата. Сделал буквально за полчаса, всё работает без лагов. Рекомендую!»</p>
+        </div>
+
+        <div class="review-card">
+            <div class="review-header">
+                <span class="author">Алексей</span>
+                <span class="stars">★★★★★</span>
+            </div>
+            <p class="review-text">«Сверстал красивый лендинг. Быстро поправил все моменты по дизайну, которые я просил. Цена супер.»</p>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact">
+        <h2 class="section-title">Оставить заявку</h2>
+        <div class="form-container">
+            <!-- Подключение бесплатного Formspree для получения сообщений на почту -->
+            <form action="https://formspree.io/f/mqakvjrq" method="POST">
+                <div class="form-group">
+                    <label for="name">Ваше имя или Никнейм</label>
+                    <input type="text" id="name" name="name" placeholder="Например: Александр" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact_info">Ваш Telegram / Телефон для связи</label>
+                    <input type="text" id="contact_info" name="contact" placeholder="@username или номер" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="service">Что нужно сделать?</label>
+                    <select id="service" name="service">
+                        <option value="landing">Сайт-визитка / Landing Page</option>
+                        <option value="bot">Telegram бот</option>
+                        <option value="fix">Правка кода / Баги</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Описание задачи (ТЗ)</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Опишите коротко, что требуется сделать..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%;"><i class="fa-solid fa-paper-plane"></i> Отправить заявку</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Кирилл. Разработка сайтов и Telegram ботов.</p>
+    </footer>
+
+</body>
+</html>
