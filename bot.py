@@ -19,7 +19,7 @@ async def start_server():
 
 # --- КОД БОТА ---
 # Замени ТОВОЙ_ТОКЕН на реальный токен от BotFather
-TOKEN = os.environ.get("BOT_TOKEN", "8606508320:AAGOsP4Z2VQFcZnhoANGKRAwn2GAr1ZBgLE")
+TOKEN = os.environ.get("BOT_TOKEN", "8715722584:AAGEsyupzMyoJcUW2mCwFM4ezeIN6GaMpUc")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
