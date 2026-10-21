@@ -1,96 +1,39 @@
+import os
 import asyncio
-from aiogram import Bot, Dispatcher, F, types
+from aiohttp import web
+from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.types import (
-    KeyboardButton,
-    ReplyKeyboardMarkup,
-)
 
-# Твой токен от BotFather
-BOT_TOKEN = "8715722584:AAGEsyupzMyoJcUW2mCwFM4ezeIN6GaMpUc"
+# --- МИНИ-ВЕБ-СЕРВЕР ДЛЯ РЕНДЕРА ---
+async def handle(request):
+    return web.Response(text="Bot is running fine!")
 
-# Твой реальный Telegram ID
-ADMIN_ID = 7008254329
+async def start_server():
+    app = web.Application()
+    app.router.add_get("/", handle)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.environ.get("PORT", 10000))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
 
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(storage=MemoryStorage())
+# --- КОД БОТА ---
+# Замени ТОВОЙ_ТОКЕН на реальный токен от BotFather
+TOKEN = os.environ.get("BOT_TOKEN", "8606508320:AAGOsP4Z2VQFcZnhoANGKRAwn2GAr1ZBgLE")
 
-
-class TicketState(StatesGroup):
-    waiting_for_task = State()
-
-
-def main_keyboard():
-    kb = [
-        [KeyboardButton(text="🎫 Создать тикет (Заказ)")],
-        [KeyboardButton(text="🌐 Открыть сайт-портфолио")],
-    ]
-    return ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
-
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
 
 @dp.message(CommandStart())
-async def cmd_start(message: types.Message):
-    await message.answer(
-        f"Привет, {message.from_user.first_name}! 👋\n\n"
-        f"Добро пожаловать в сервис заказа сайтов и Telegram-ботов.\n"
-        f"Чтобы оставить заявку или задать вопрос, нажми кнопку 'Создать тикет' ниже!",
-        reply_markup=main_keyboard(),
-    )
-
-
-@dp.message(F.text == "🌐 Открыть сайт-портфолио")
-async def send_website(message: types.Message):
-    await message.answer(
-        "Посмотреть наши услуги и примеры работ можно на сайте:\n"
-        "👉 https://davidovkirilo2011-cloud.github.io/portfolio/"
-    )
-
-
-@dp.message(F.text == "🎫 Создать тикет (Заказ)")
-async def start_ticket(message: types.Message, state: FSMContext):
-    await state.set_state(TicketState.waiting_for_task)
-    await message.answer(
-        "📝 Опишите вашу задачу:\n\n"
-        "Например: «Нужен сайт-визитка для сервиса ремонта телефонов» или «Нужен бот для модерации чата».\n\n"
-        "Напишите текст сообщения ниже 👇"
-    )
-
-
-@dp.message(TicketState.waiting_for_task)
-async def process_ticket(message: types.Message, state: FSMContext):
-    task_text = message.text
-    user = message.from_user
-    username = f"@{user.username}" if user.username else "нет юзернейма"
-
-    # Ответ клиенту
-    await message.answer(
-        "✅ Ваш тикет успешно создан!\nМы свяжемся с вами в ближайшее время.",
-        reply_markup=main_keyboard(),
-    )
-
-    # Сообщение тебе (админу)
-    ticket_for_admin = (
-        f"📥 НОВЫЙ ТИКЕТ (ЗАКАЗ)!\n\n"
-        f"👤 Заказчик: {user.first_name} ({username})\n"
-        f"🆔 ID: {user.id}\n\n"
-        f"💬 Описание задачи:\n{task_text}"
-    )
-
-    try:
-        await bot.send_message(chat_id=ADMIN_ID, text=ticket_for_admin)
-    except Exception as e:
-        print(f"Ошибка отправки тикета админу: {e}")
-
-    await state.clear()
-
+async def start_cmd(message: types.Message):
+    await message.answer("Привет! Я бот для приёма заказов и тикетов. Напиши своё сообщение, и Кирилл скоро ответит!")
 
 async def main():
+    # Запускаем сервер портов
+    await start_server()
     print("🚀 Бот успешно запущен и готов принимать тикеты!")
+    # Запускаем бота
     await dp.start_polling(bot)
-
 
 if __name__ == "__main__":
     asyncio.run(main())
